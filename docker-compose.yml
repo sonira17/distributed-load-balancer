@@ -59,9 +59,9 @@ services:
     environment:
       GF_SMTP_ENABLED: "true"
       GF_SMTP_HOST: "smtp.gmail.com:587"
-      GF_SMTP_USER: "sonirathore382@gmail.com"
-      GF_SMTP_PASSWORD: "ruwu mkpt cfym igah"
-      GF_SMTP_FROM_ADDRESS: "sonirathore382@gmail.com"
+      GF_SMTP_USER: "youremail@gmail.com"
+      GF_SMTP_PASSWORD: "password"
+      GF_SMTP_FROM_ADDRESS: "youremail@gmail.com"
       GF_SMTP_FROM_NAME: "Grafana"
     depends_on:
       - prometheus
