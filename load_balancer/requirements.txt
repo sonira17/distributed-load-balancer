@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+httpx
+redis
+prometheus-client
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-httpx
+opentelemetry-exporter-otlp

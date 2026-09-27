@@ -1,0 +1,75 @@
+services:
+
+  server1:
+    build:
+      context: ./server
+    command: uvicorn server1:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+
+  server2:
+    build:
+      context: ./server
+    command: uvicorn server2:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+
+  server3:
+    build:
+      context: ./server
+    command: uvicorn server3:app --host 0.0.0.0 --port 8003
+    ports:
+      - "8003:8003"
+
+  load-balancer:
+    build:
+      context: ./load_balancer
+    ports:
+      - "8000:8000"
+    depends_on:
+      - server1
+      - server2
+      - server3
+      - redis
+  
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - load-balancer
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - load-balancer
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST: "smtp.gmail.com:587"
+      GF_SMTP_USER: "sonirathore382@gmail.com"
+      GF_SMTP_PASSWORD: "ruwu mkpt cfym igah"
+      GF_SMTP_FROM_ADDRESS: "sonirathore382@gmail.com"
+      GF_SMTP_FROM_NAME: "Grafana"
+    depends_on:
+      - prometheus
+  jaeger:
+    image: jaegertracing/jaeger:2.20.0
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      
